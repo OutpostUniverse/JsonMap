@@ -3,7 +3,7 @@ UTILITYBASE := OP2Utility
 UTILITYDIR := OP2Utility
 UTILITYLIB := $(UTILITYDIR)/lib$(UTILITYBASE).a
 
-CPPFLAGS := -I $(UTILITYDIR)/include
+CPPFLAGS := -I $(UTILITYDIR)/include -I packages/nlohmann.json.3.2.0/build/native/include/nlohmann/
 CXXFLAGS := -std=c++14 -g -Wall -Wno-unknown-pragmas
 LDFLAGS := -L$(UTILITYDIR)
 LDLIBS := -l$(UTILITYBASE) -lstdc++fs -lstdc++ -lm
@@ -22,8 +22,11 @@ POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 SRCS := $(shell find $(SRCDIR) -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 
-.PHONY: all op2utility clean
+.PHONY: all restore op2utility clean
 all: mapToJson
+
+restore:
+	nuget restore packages.config -SolutionDirectory ./
 
 mapToJson: $(UTILITYLIB) $(OBJS)
 	$(CXX) $(LDFLAGS) -o "$@" $^ $(LDLIBS)
