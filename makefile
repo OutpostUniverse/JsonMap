@@ -28,7 +28,7 @@ all: mapToJson
 restore:
 	nuget restore packages.config -SolutionDirectory ./
 
-mapToJson: $(UTILITYLIB) $(OBJS)
+mapToJson: $(OBJS) | op2utility
 	$(CXX) $(LDFLAGS) -o "$@" $^ $(LDLIBS)
 
 $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(DEPDIR)/%.d
@@ -41,8 +41,6 @@ $(DEPDIR)/%.d: ;
 
 include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(DEPDIR)/%.d,$(SRCS)))
 
-
-$(UTILITYLIB): op2utility
 
 op2utility:
 	$(MAKE) -C $(UTILITYDIR)
