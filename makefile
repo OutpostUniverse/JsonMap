@@ -19,7 +19,7 @@ POSTCOMPILE = @mv -f $(OBJDIR)$*.Td $(OBJDIR)$*.d && touch $@
 SRCS := $(shell find $(SRCDIR) -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)%.cpp,$(OBJDIR)%.o,$(SRCS))
 
-.PHONY: all restore op2utility clean
+.PHONY: all restore op2utility clean clean-all
 all: mapToJson
 
 restore: packages/
@@ -44,4 +44,7 @@ op2utility:
 	$(MAKE) -C $(UTILITYDIR)
 
 clean:
-	rm $(OBJS)
+	rm -rf "$(BUILDDIR)"
+clean-all: clean
+	rm -rf packages/
+	rm -f mapToJson
