@@ -41,7 +41,7 @@ include $(wildcard $(patsubst $(SRCDIR)%.cpp,$(OBJDIR)%.d,$(SRCS)))
 
 
 op2utility:
-	$(MAKE) -C $(UTILITYDIR)
+	$(MAKE) -C "$(UTILITYDIR)"
 
 clean:
 	rm -rf "$(BUILDDIR)"
