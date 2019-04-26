@@ -29,7 +29,7 @@ packages/: packages.config
 mapToJson: $(OBJS) | op2utility
 	$(CXX) $(LDFLAGS) -o "$@" $^ $(LDLIBS)
 
-$(OBJS): $(OBJDIR)%.o : $(SRCDIR)%.cpp $(OBJDIR)%.d
+$(OBJS): $(OBJDIR)%.o : $(SRCDIR)%.cpp $(OBJDIR)%.d packages/
 	@mkdir -p ${@D}
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
 	$(POSTCOMPILE)
