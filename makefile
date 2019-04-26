@@ -1,25 +1,25 @@
 
 UTILITYBASE := OP2Utility
-UTILITYDIR := OP2Utility
-UTILITYLIB := $(UTILITYDIR)/lib$(UTILITYBASE).a
+UTILITYDIR := OP2Utility/
+UTILITYLIB := $(UTILITYDIR)lib$(UTILITYBASE).a
 
-CPPFLAGS := -I $(UTILITYDIR)/include -I packages/nlohmann.json.3.2.0/build/native/include/nlohmann/
+CPPFLAGS := -I $(UTILITYDIR)include -I packages/nlohmann.json.3.2.0/build/native/include/nlohmann/
 CXXFLAGS := -std=c++14 -g -Wall -Wno-unknown-pragmas
 LDFLAGS := -L$(UTILITYDIR)
 LDLIBS := -l$(UTILITYBASE) -lstdc++fs -lstdc++ -lm
 
-SRCDIR := src
-BUILDDIR := .build
+SRCDIR := src/
+BUILDDIR := .build/
 BINDIR := ./
-OBJDIR := $(BUILDDIR)/obj
+OBJDIR := $(BUILDDIR)obj/
 
-DEPFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)/$*.Td
+DEPFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)$*.Td
 
 COMPILE.cpp = $(CXX) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
-POSTCOMPILE = @mv -f $(OBJDIR)/$*.Td $(OBJDIR)/$*.d && touch $@
+POSTCOMPILE = @mv -f $(OBJDIR)$*.Td $(OBJDIR)$*.d && touch $@
 
 SRCS := $(shell find $(SRCDIR) -name '*.cpp')
-OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
+OBJS := $(patsubst $(SRCDIR)%.cpp,$(OBJDIR)%.o,$(SRCS))
 
 .PHONY: all restore op2utility clean
 all: mapToJson
@@ -30,15 +30,15 @@ restore:
 mapToJson: $(OBJS) | op2utility
 	$(CXX) $(LDFLAGS) -o "$@" $^ $(LDLIBS)
 
-$(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(OBJDIR)/%.d
+$(OBJS): $(OBJDIR)%.o : $(SRCDIR)%.cpp $(OBJDIR)%.d
 	@mkdir -p ${@D}
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
 	$(POSTCOMPILE)
 
-$(OBJDIR)/%.d: ;
-.PRECIOUS: $(OBJDIR)/%.d
+$(OBJDIR)%.d: ;
+.PRECIOUS: $(OBJDIR)%.d
 
-include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.d,$(SRCS)))
+include $(wildcard $(patsubst $(SRCDIR)%.cpp,$(OBJDIR)%.d,$(SRCS)))
 
 
 op2utility:
