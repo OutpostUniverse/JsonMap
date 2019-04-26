@@ -6,7 +6,7 @@ using json = nlohmann::json;
 
 
 void mapFileToJsonFile(const std::string& mapFileName, const std::string& outputFileName) {
-	auto map = MapReader::ReadMap(mapFileName);
+	auto map = Map::ReadMap(mapFileName);
 	map.TrimTilesetSources();
 	auto json = mapToJson(map);
 
@@ -17,14 +17,14 @@ void mapFileToJsonFile(const std::string& mapFileName, const std::string& output
 }
 
 
-json mapToJson(const MapData& map) {
+json mapToJson(const Map& map) {
 	json j;
 
-	auto width = map.header.MapTileWidth();
-	auto height = map.header.mapTileHeight;
+	auto width = map.WidthInTiles();
+	auto height = map.HeightInTiles();
 	j["header"]["width"] = width;
 	j["header"]["height"] = height;
-	j["tiles"] = mapCollect(map.tiles, [](TileData tileData) { return tileData.tileIndex; });
+	j["tiles"] = mapCollect(map.tiles, [](Tile tile) { return tile.tileMappingIndex; });
 	// Optionally store clip rect if it is not the expected default
 	if (!isDefaultClipRect(map.clipRect, width, height)) {
 		//std::cerr << "Non-default clip rect" << std::endl;
@@ -36,14 +36,14 @@ json mapToJson(const MapData& map) {
 	return j;
 }
 
-json tilesetToJson(const MapData& map) {
+json tilesetToJson(const Map& map) {
 	json j;
 	// Tileset
 	j["sources"] = map.tilesetSources;
 	// mapCollect(map.tilesetSources, [](TilesetSource source) {
 	// 	return json{{"filename", source.tilesetFilename}, {"numTiles", source.numTiles}};
 	// });
-	j["tileInfos"] = map.tileInfos;
+	j["tileMappings"] = map.tileMappings;
 	j["terrainTypes"] = map.terrainTypes;
 	//map.tileGroups;
 
@@ -67,37 +67,37 @@ void to_json(json& j, const TilesetSource& tilesetSource) {
 	};
 }
 
-void to_json(json& j, const TileInfo& tileInfo) {
+void to_json(json& j, const TileMapping& tileMapping) {
 	j = json{
-		{"tilesetIndex", tileInfo.tilesetIndex},
-		{"tileIndex", tileInfo.tileIndex},
-		{"animationCount", tileInfo.animationCount},
-		{"animationDelay", tileInfo.animationDelay}
+		{"tilesetIndex", tileMapping.tilesetIndex},
+		{"tileGraphicIndex", tileMapping.tileGraphicIndex},
+		{"animationCount", tileMapping.animationCount},
+		{"animationDelay", tileMapping.animationDelay}
 	};
 }
 
-void to_json(json& j, const TileRange& tileRange) {
+void to_json(json& j, const Range16& range) {
 	j = json{
-		{"start", tileRange.start},
-		{"end", tileRange.end}
+		{"start", range.start},
+		{"end", range.end}
 	};
 }
 
 void to_json(json& j, const TerrainType& terrainType) {
 	j = json{
-		{"tileRange", terrainType.tileRange},
-		{"bulldozedTileIndex", terrainType.bulldozedTileIndex},
-		{"rubbleTileIndex", terrainType.rubbleTileIndex},
-		{"tubeTiles", terrainType.tubeTiles},
-		{"wall", terrainType.wall},
-		{"lavaTileIndex", terrainType.lavaTileIndex},
+		{"tileRange", terrainType.tileMappingRange},
+		{"bulldozedTileMappingIndex", terrainType.bulldozedTileMappingIndex},
+		{"rubbleTileMappingIndex", terrainType.rubbleTileMappingIndex},
+		{"tubeTileMappings", terrainType.tubeTileMappings},
+		{"wallTileMappingIndexes", terrainType.wallTileMappingIndexes},
+		{"lavaTileMappingIndex", terrainType.lavaTileMappingIndex},
 		{"flat1", terrainType.flat1},
 		{"flat2", terrainType.flat2},
 		{"flat3", terrainType.flat3},
-		{"tube", terrainType.tube},
-		{"scorchedTileIndex", terrainType.scorchedTileIndex},
+		{"tubeTileMappingIndexes", terrainType.tubeTileMappingIndexes},
+		{"scorchedTileMappingIndex", terrainType.scorchedTileMappingIndex},
 		{"scorchedRange", terrainType.scorchedRange},
-		{"unkown", terrainType.unkown},
+		{"unknown", terrainType.unknown},
 	};
 }
 
