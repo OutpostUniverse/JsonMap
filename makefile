@@ -12,12 +12,11 @@ SRCDIR := src
 BUILDDIR := .build
 BINDIR := ./
 OBJDIR := $(BUILDDIR)/obj
-DEPDIR := $(OBJDIR)
 
-DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+DEPFLAGS = -MT $@ -MMD -MP -MF $(OBJDIR)/$*.Td
 
 COMPILE.cpp = $(CXX) $(DEPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TARGET_ARCH) -c
-POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
+POSTCOMPILE = @mv -f $(OBJDIR)/$*.Td $(OBJDIR)/$*.d && touch $@
 
 SRCS := $(shell find $(SRCDIR) -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
@@ -31,15 +30,15 @@ restore:
 mapToJson: $(OBJS) | op2utility
 	$(CXX) $(LDFLAGS) -o "$@" $^ $(LDLIBS)
 
-$(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(DEPDIR)/%.d
+$(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(OBJDIR)/%.d
 	@mkdir -p ${@D}
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<
 	$(POSTCOMPILE)
 
-$(DEPDIR)/%.d: ;
-.PRECIOUS: $(DEPDIR)/%.d
+$(OBJDIR)/%.d: ;
+.PRECIOUS: $(OBJDIR)/%.d
 
-include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(DEPDIR)/%.d,$(SRCS)))
+include $(wildcard $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.d,$(SRCS)))
 
 
 op2utility:
