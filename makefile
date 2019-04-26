@@ -22,7 +22,8 @@ OBJS := $(patsubst $(SRCDIR)%.cpp,$(OBJDIR)%.o,$(SRCS))
 .PHONY: all restore op2utility clean
 all: mapToJson
 
-restore:
+restore: packages/
+packages/: packages.config
 	nuget restore packages.config -SolutionDirectory ./
 
 mapToJson: $(OBJS) | op2utility
