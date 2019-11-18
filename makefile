@@ -2,7 +2,7 @@
 UTILITYDIR := OP2Utility/
 
 CPPFLAGS := -I $(UTILITYDIR)include -I packages/nlohmann.json.3.2.0/build/native/include/nlohmann/
-CXXFLAGS := -std=c++17 -O2 -g -Wall -Wno-unknown-pragmas
+CXXFLAGS := -std=c++17 -O2 -g -Wall -Wpedantic -Wno-unknown-pragmas
 LDFLAGS := -L$(UTILITYDIR)
 LDLIBS := -lOP2Utility -lstdc++fs -lstdc++ -lm
 
