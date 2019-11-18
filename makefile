@@ -20,13 +20,13 @@ SRCS := $(shell find $(SRCDIR) -name '*.cpp')
 OBJS := $(patsubst $(SRCDIR)%.cpp,$(OBJDIR)%.o,$(SRCS))
 
 .PHONY: all restore op2utility clean clean-all
-all: mapToJson
+all: jsonMap
 
 restore: packages/
 packages/: packages.config
 	nuget restore packages.config -SolutionDirectory ./
 
-mapToJson: $(OBJS) | op2utility
+jsonMap: $(OBJS) | op2utility
 	$(CXX) $(LDFLAGS) -o "$@" $^ $(LDLIBS)
 
 $(OBJS): $(OBJDIR)%.o : $(SRCDIR)%.cpp $(OBJDIR)%.d packages/
@@ -47,4 +47,4 @@ clean:
 	rm -rf "$(BUILDDIR)"
 clean-all: clean
 	rm -rf packages/
-	rm -f mapToJson
+	rm -f jsonMap

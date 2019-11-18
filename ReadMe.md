@@ -4,7 +4,7 @@ This utility converts Outpost 2 map and saved game binary files to a text readab
 
 +++ Example Usage +++
 ```
-./mapToJson eden01.map
+./jsonMap eden01.map
 ```
 
 +++ Compiling +++
