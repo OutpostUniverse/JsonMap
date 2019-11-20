@@ -1,6 +1,11 @@
 #include "OP2Utility.h"
+#if _WIN32
+#include <nlohmann/json.hpp>
+#else
 #include <json.hpp>
+#endif
 #include <string>
+#include <cstddef>
 
 void mapFileToJsonFile(const std::string& mapFileName, const std::string& outputFileName);
 nlohmann::json mapToJson(const Map& map);
