@@ -1,3 +1,10 @@
 .build/
 packages/
 jsonMap
+**/x86
+**/x64
+**/Debug
+**/Release
+*.user
+*.vs
+VisualStudio
