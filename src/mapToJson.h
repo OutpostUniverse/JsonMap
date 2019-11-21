@@ -1,5 +1,5 @@
 #include "OP2Utility.h"
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include <string>
 
 void mapFileToJsonFile(const std::string& mapFileName, const std::string& outputFileName);
