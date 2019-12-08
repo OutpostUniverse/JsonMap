@@ -1,10 +1,10 @@
 # For building on CircleCI with Google Test
 
 # Build from the root project folder with:
-#   docker build .circleci/ --tag outpostuniverse/circleci-gcc-clang-googletest
+#   docker build .circleci/ --tag outpostuniverse/circleci-gcc-clang-googletest-nuget
 # Push image to DockerHub with:
 #   docker login
-#   docker push outpostuniverse/circleci-gcc-clang-googletest
+#   docker push outpostuniverse/circleci-gcc-clang-googletest-nuget
 
 # Run locally using the CircleCI command line interface:
 #   circleci build
@@ -42,3 +42,9 @@ RUN mkdir -p ${gtestBuildDir} && \
   make -C ${gtestBuildDir} && \
   cp ${gtestBuildDir}lib*.a /usr/lib && \
   rm -rf ${gtestBuildDir}
+
+# Install C++ package manager
+# Disable interactive prompt for tzdata package install
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    nuget \
+  && rm -rf /var/lib/apt/lists/*
